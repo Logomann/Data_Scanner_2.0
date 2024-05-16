@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style  name="MainBtnStyle">
+        <item name="android:textColor">@color/main_text_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textColor">@color/main_text_color</item>
+    </style>
+        <style name="BottomNavThem" parent="">
+        <item name="colorPrimary">@color/logo</item>
+    </style>
+
+
+
+</resources>

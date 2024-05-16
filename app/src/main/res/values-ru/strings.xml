@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="authorization">Авторизация</string>
+    <string name="input_pin">Введите PIN код</string>
+    <string name="ok">OK</string>
+    <string name="repeat">Повторить</string>
+    <string name="vin_code">VIN</string>
+    <string name="field">Площадка</string>
+    <string name="row">Ряд</string>
+    <string name="cell">Ячейка</string>
+    <string name="clear">Очистить</string>
+    <string name="clear_cell">Очистить ячейку</string>
+    <string name="relocation">Перепарковка</string>
+    <string name="search_by_VIN">Поиск по VIN</string>
+    <string name="search_by_place">Поиск по месту</string>
+    <string name="lot">Лот</string>
+    <string name="lot_in_ladung">Лот в ладунге</string>
+    <string name="loading_sheet">Погрузочный лист</string>
+    <string name="car_lotting">Лотирование</string>
+    <string name="driver">Вод</string>
+    <string name="way">Путь</string>
+    <string name="wagon">Вагон</string>
+    <string name="take_shot">Сделать снимок</string>
+    <string name="car_operations">Автомобили</string>
+    <string name="container_operations">Контейнеры</string>
+    <string name="settings">Настройки</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="scanner_id">Номер ТСД</string>
+    <string name="permission_request_denied">Нет разрешения на использование камеры</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="nointernet">Нет интернета</string>
+    <string name="sector">Сектор</string>
+    <string name="enter_container_number">Введите номер контейнера</string>
+    <string name="container_arrival">Приход контейнеров</string>
+    <string name="container_in_carriage">Контейнер в вагоне</string>
+    <string name="enter_carriage_number">Введите номер вагона</string>
+    <string name="enter_vin">Введите VIN</string>
+    <string name="enter_lot_number">Введите номер лота</string>
+    <string name="create_lot">Создать лот</string>
+    <string name="add">Добавить</string>
+    <string name="not_all_cells_are_filled">Не все поля заполнены!</string>
+    <string name="vin_is_incorrect">Неверный VIN!</string>
+    <string name="enter_row">Введите номер ряда</string>
+    <string name="enter_driver_code">Введите код водителя</string>
+    <string name="vin_already_in_list">VIN уже в списке!</string>
+</resources>

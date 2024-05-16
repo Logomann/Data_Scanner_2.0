@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="settings_background">#1A1B22</color>
+    <color name="search_background">#FFFFFF</color>
+    <color name="main_text_color">#FFFFFF</color>
+    <color name="edt_background">#000000</color>
+    <color name="edt_text_color">#000000</color>
+    <color name="camera_bck">#FFFFFF</color>
+    <color name="pb_color">#FFFFFF</color>
+    <color name="hint_color">#000000</color>
+    <color name="logo">#174b73</color>
+</resources>

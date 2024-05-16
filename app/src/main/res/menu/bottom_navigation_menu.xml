@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/carOperationsFragment"
+        android:icon="@drawable/car"
+        android:title="@string/car_operations"/>
+    <item
+        android:id="@+id/containerOperationsFragment"
+        android:icon="@drawable/train_car_container"
+        android:title="@string/container_operations"/>
+</menu>

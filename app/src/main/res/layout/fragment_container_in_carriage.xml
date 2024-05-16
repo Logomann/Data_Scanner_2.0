@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_border"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_border"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_border"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="48dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/container_in_carriage_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="container_in_carriage_num_et
+        ,container_carriage_et,container_btn_ok,container_btn_clear" />
+
+
+    <EditText
+        android:id="@+id/container_in_carriage_num_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:background="@drawable/x_base_sir"
+        android:backgroundTint="@color/search_background"
+        android:digits="@string/input_digits_container"
+        android:paddingHorizontal="8dp"
+        android:hint="@string/enter_container_number"
+        android:importantForAutofill="no"
+        android:inputType="textCapCharacters"
+        android:maxLength="11"
+        android:maxLines="1"
+        android:textAllCaps="true"
+        android:textColor="@color/edt_text_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/right_border"
+        app:layout_constraintStart_toEndOf="@id/left_border"
+        app:layout_constraintTop_toBottomOf="@id/top_border"
+        tools:ignore="LabelFor"
+        tools:text="WBXPA73495W" />
+
+
+    <EditText
+        android:id="@+id/container_carriage_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/x_base_sir"
+        android:backgroundTint="@color/search_background"
+        android:paddingHorizontal="8dp"
+        android:hint="@string/enter_carriage_number"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:maxLength="8"
+        android:maxLines="1"
+        android:textColor="@color/edt_text_color"
+        app:layout_constraintEnd_toStartOf="@id/right_border"
+        app:layout_constraintStart_toEndOf="@id/left_border"
+        app:layout_constraintTop_toBottomOf="@id/container_in_carriage_num_et"
+        tools:ignore="LabelFor"
+        tools:text="123" />
+
+
+    <Button
+        android:id="@+id/container_btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/logo"
+        android:text="@string/ok"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/container_btn_clear"
+        app:layout_constraintStart_toEndOf="@id/left_border"
+        app:layout_constraintTop_toBottomOf="@id/container_carriage_et"
+        tools:text="ОК" />
+
+    <Button
+        android:id="@+id/container_btn_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/red"
+        android:text="@string/clear"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/right_border"
+        app:layout_constraintStart_toEndOf="@id/container_btn_ok"
+        app:layout_constraintTop_toBottomOf="@id/container_carriage_et"
+        tools:text="Очистить" />
+
+    <ProgressBar
+        android:id="@+id/container_carriage_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/pb_color"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/right_border"
+        app:layout_constraintStart_toStartOf="@id/left_border"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
