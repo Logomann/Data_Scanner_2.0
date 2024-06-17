@@ -12,6 +12,8 @@ import com.logomann.datascanner20.data.network.Response
 import com.logomann.datascanner20.data.network.SQLConnection
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.util.SCANNER_ID
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.sql.Statement
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -24,7 +26,7 @@ class PostgreNetworkClient(
 ) : NetworkClient {
     private val tsdID = sharedPreferences.getInt(SCANNER_ID, 1)
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
@@ -57,7 +59,9 @@ class PostgreNetworkClient(
         } else {
             Response().apply { resultCode = 400 }
         }
-        return response
+        return withContext(Dispatchers.IO) {
+            response
+        }
 
     }
 

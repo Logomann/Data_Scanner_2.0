@@ -35,7 +35,7 @@ class CarRelocationViewModel(private val interactor: ConnectionInteractor) : Vie
             if (data == null) {
                 screenStateLiveData.postValue(ScreenState.NoInternet)
             } else if (code == 1) {
-                screenStateLiveData.postValue(ScreenState.Content(data))
+                screenStateLiveData.postValue(ScreenState.AddressCleared(data))
             } else if (code == 2) {
                 screenStateLiveData.postValue(ScreenState.ServerError)
             } else {

@@ -77,6 +77,7 @@ class CarSearchByVinFragment : Fragment() {
                 }
 
                 is ScreenState.ListRefreshed -> {}
+                is ScreenState.AddressCleared -> {}
             }
         }
         return binding.root
@@ -88,7 +89,7 @@ class CarSearchByVinFragment : Fragment() {
             startCamera()
         }
         binding.carOpBtnClear.setOnClickListener {
-            vinCodeEt.setText("")
+            vinCodeEt.setText(getString(R.string.empty))
         }
         requireActivity().supportFragmentManager.setFragmentResultListener(
             CAMERA_REQUEST_KEY,
@@ -96,6 +97,10 @@ class CarSearchByVinFragment : Fragment() {
         ) { _, bundle ->
             viewModel.setCameraResult(bundle.getString(CAMERA_RESULT).toString())
         }
+    }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun startCamera() {
@@ -139,6 +144,6 @@ class CarSearchByVinFragment : Fragment() {
     }
 
     private fun clearText() {
-        vinCodeEt.setText("")
+        vinCodeEt.setText(getString(R.string.empty))
     }
 }

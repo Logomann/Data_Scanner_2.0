@@ -91,6 +91,11 @@ class CameraFragment : Fragment() {
         startCamera()
     }
 
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
+    }
+
     private fun sendResult(value: String) {
         requireActivity().supportFragmentManager.setFragmentResult(
             CAMERA_REQUEST_KEY,

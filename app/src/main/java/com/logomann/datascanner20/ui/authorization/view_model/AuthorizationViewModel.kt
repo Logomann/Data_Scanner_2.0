@@ -3,9 +3,11 @@ package com.logomann.datascanner20.ui.authorization.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.domain.network.ConnectionInteractor
 import com.logomann.datascanner20.ui.ScreenState
+
 
 
 class AuthorizationViewModel(

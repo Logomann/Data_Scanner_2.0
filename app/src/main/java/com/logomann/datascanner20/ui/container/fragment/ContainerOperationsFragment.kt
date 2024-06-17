@@ -28,12 +28,13 @@ class ContainerOperationsFragment : Fragment(), SelectOperation {
         super.onViewCreated(view, savedInstanceState)
         val adapter = ContainerOperationsAdapter(hostFragment = this)
         binding.fragContainerVp.adapter = adapter
-        tabMediator = TabLayoutMediator(binding.fragContainerTl,binding.fragContainerVp) { tab, position ->
-            when (position) {
-                0 -> tab.text = getString(R.string.container_arrival)
-                1 -> tab.text = getString(R.string.container_in_carriage)
+        tabMediator =
+            TabLayoutMediator(binding.fragContainerTl, binding.fragContainerVp) { tab, position ->
+                when (position) {
+                    0 -> tab.text = getString(R.string.container_arrival)
+                    1 -> tab.text = getString(R.string.container_in_carriage)
+                }
             }
-        }
         tabMediator.attach()
     }
 
@@ -42,8 +43,10 @@ class ContainerOperationsFragment : Fragment(), SelectOperation {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         tabMediator.detach()
+        _binding = null
+        super.onDestroy()
+
     }
 
 

@@ -70,6 +70,7 @@ class CarlLotInLadungFragment : Fragment() {
                 }
 
                 is ScreenState.ListRefreshed -> {}
+                is ScreenState.AddressCleared -> {}
             }
         }
         return binding.root
@@ -95,6 +96,11 @@ class CarlLotInLadungFragment : Fragment() {
                 viewModel.request(lotEt.text.toString(), ladungEt.text.toString())
             }
         }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun showGroup() {

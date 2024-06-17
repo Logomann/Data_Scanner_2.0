@@ -20,4 +20,8 @@ class CarLoadingSheetFragment : Fragment() {
         _binding = FragmentCarLoadingSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
+    }
 }

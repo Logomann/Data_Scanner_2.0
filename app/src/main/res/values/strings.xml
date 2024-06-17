@@ -45,6 +45,7 @@
     <string name="enter_row">Enter row</string>
     <string name="enter_driver_code">Enter driver code</string>
     <string name="vin_already_in_list">VIN already in list!</string>
+    <string name="empty" translatable="false"> </string>>
     <string-array name="ways">
         <item>1</item>
         <item>2</item>

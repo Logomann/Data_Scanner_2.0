@@ -80,10 +80,15 @@ class ContainerArrivalFragment : Fragment() {
                 }
 
                 is ScreenState.ListRefreshed -> {}
+                is ScreenState.AddressCleared -> TODO()
             }
 
         }
         return binding.root
+    }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun showGroup() {
@@ -104,10 +109,10 @@ class ContainerArrivalFragment : Fragment() {
     }
 
     private fun clearText() {
-        containerNumber.setText("")
-        fieldEt.setText("")
-        rowEt.setText("")
-        cellEt.setText("")
+        containerNumber.setText(getString(R.string.empty))
+        fieldEt.setText(getString(R.string.empty))
+        rowEt.setText(getString(R.string.empty))
+        cellEt.setText(getString(R.string.empty))
     }
 
     private fun showMessage(message: String, isError: Boolean) {

@@ -115,6 +115,8 @@ class CarLottingFragment : Fragment() {
                     }
                     adapter.notifyDataSetChanged()
                 }
+
+                is ScreenState.AddressCleared -> {}
             }
 
         }
@@ -129,6 +131,10 @@ class CarLottingFragment : Fragment() {
         ) { _, bundle ->
             viewModel.setCameraResult(bundle.getString(CAMERA_RESULT).toString())
         }
+    }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun startCamera() {
@@ -167,8 +173,8 @@ class CarLottingFragment : Fragment() {
     }
 
     private fun clearText() {
-        vinCode.setText("")
-        driver.setText("")
+        vinCode.setText(getString(R.string.empty))
+        driver.setText(getString(R.string.empty))
         viewModel.clearList()
     }
 

@@ -38,4 +38,10 @@ class MenuFragment : Fragment() {
         bottomNavigationView.setupWithNavController(navController)
     }
 
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
+    }
+
+
 }

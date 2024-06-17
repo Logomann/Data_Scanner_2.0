@@ -40,6 +40,10 @@ class SettingsFragment : Fragment() {
             viewModel.switchTheme()
         }
     }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
+    }
 
     private fun getScannerID(): Int {
         return viewModel.getScannerID()

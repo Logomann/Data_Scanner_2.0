@@ -102,6 +102,11 @@ class CarRelocationFragment : Fragment() {
                 }
 
                 is ScreenState.ListRefreshed -> {}
+                is ScreenState.AddressCleared -> {
+                    showGroup()
+                    showMessage(screenState.message.toString(), false)
+                    clearCells()
+                }
             }
         }
         return binding.root
@@ -115,6 +120,10 @@ class CarRelocationFragment : Fragment() {
         ) { _, bundle ->
             viewModel.setCameraResult(bundle.getString(CAMERA_RESULT).toString())
         }
+    }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun startCamera() {
@@ -131,10 +140,13 @@ class CarRelocationFragment : Fragment() {
     }
 
     private fun clearText() {
-        vinCodeEt.setText("")
-        fieldEt.setText("")
-        rowEt.setText("")
-        cellEt.setText("")
+        vinCodeEt.setText(getString(R.string.empty))
+        clearCells()
+    }
+    private fun clearCells() {
+        fieldEt.setText(getString(R.string.empty))
+        rowEt.setText(getString(R.string.empty))
+        cellEt.setText(getString(R.string.empty))
     }
 
     private fun hideGroup() {

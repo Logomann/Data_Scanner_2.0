@@ -49,6 +49,7 @@ class CarOperationsFragment : Fragment(), SelectOperation {
     override fun onDestroy() {
         super.onDestroy()
         tabMediator.detach()
+        _binding = null
     }
 
 }

@@ -79,10 +79,15 @@ class CarSearchByPlaceFragment : Fragment() {
                 }
 
                 is ScreenState.ListRefreshed -> {}
+                is ScreenState.AddressCleared -> {}
             }
 
         }
         return binding.root
+    }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun showMessage(message: String, isError: Boolean) {
@@ -110,9 +115,9 @@ class CarSearchByPlaceFragment : Fragment() {
     }
 
     private fun clearText() {
-        fieldEt.setText("")
-        rowEt.setText("")
-        cellEt.setText("")
+        fieldEt.setText(getString(R.string.empty))
+        rowEt.setText(getString(R.string.empty))
+        cellEt.setText(getString(R.string.empty))
     }
 
     private fun checkRequest(): Boolean {

@@ -71,11 +71,15 @@ class ContainerInCarriageFragment : Fragment() {
                 }
 
                 is ScreenState.ListRefreshed -> {}
-
+                is ScreenState.AddressCleared -> {}
             }
 
         }
         return binding.root
+    }
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun showGroup() {
@@ -96,8 +100,8 @@ class ContainerInCarriageFragment : Fragment() {
     }
 
     private fun clearText() {
-        containerNumber.setText("")
-        wagonNumber.setText("")
+        containerNumber.setText(getString(R.string.empty))
+        wagonNumber.setText(getString(R.string.empty))
     }
 
     private fun showMessage(message: String, isError: Boolean) {

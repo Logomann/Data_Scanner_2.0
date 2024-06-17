@@ -80,6 +80,7 @@ class AuthorizationFragment : Fragment() {
                 }
 
                 is ScreenState.ListRefreshed -> {}
+                is ScreenState.AddressCleared -> {}
             }
         }
 
@@ -121,6 +122,11 @@ class AuthorizationFragment : Fragment() {
         if (pinCode.isNotEmpty()) {
             viewModel.setIsResumed(true)
         }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun authorize() {
