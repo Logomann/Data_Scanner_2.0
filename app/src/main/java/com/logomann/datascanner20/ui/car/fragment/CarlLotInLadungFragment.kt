@@ -121,8 +121,8 @@ class CarlLotInLadungFragment : Fragment() {
     }
 
     private fun clearText() {
-        lotEt.setText("")
-        ladungEt.setText("")
+        lotEt.setText(getString(R.string.empty))
+        ladungEt.setText(getString(R.string.empty))
     }
 
     private fun showMessage(message: String, isError: Boolean) {
