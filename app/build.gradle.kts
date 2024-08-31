@@ -7,14 +7,14 @@ plugins {
 
 android {
     namespace = "com.logomann.datascanner20"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.logomann.datascanner20"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 4
-        versionName = "1.0.2"
+        targetSdk = 35
+        versionCode = 5
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,6 +38,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildToolsVersion = "35.0.0 rc3"
 }
 dependencies {
     implementation(libs.androidx.core.splashscreen)
