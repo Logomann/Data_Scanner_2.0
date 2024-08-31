@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.logomann.datascanner20"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 5
         versionName = "1.0.3"
 
