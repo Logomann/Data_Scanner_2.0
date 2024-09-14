@@ -42,7 +42,10 @@ class CarSearchByVINViewModel(private val interactor: ConnectionInteractor) : Vi
     }
 
     fun request() {
-        if (isVinEmpty()) {
+        if (vin.isEmpty()) {
+            isErrorVin = true
+        }
+        if (isErrorVin) {
             _stateErrorFields.value = true
         } else {
             search()
@@ -51,10 +54,6 @@ class CarSearchByVINViewModel(private val interactor: ConnectionInteractor) : Vi
 
     fun clearVin() {
         vin = ""
-    }
-
-    private fun isVinEmpty(): Boolean {
-        return vin.isEmpty()
     }
 
     fun setCameraResult(result: String) {

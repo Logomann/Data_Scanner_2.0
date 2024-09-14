@@ -69,7 +69,7 @@ class CarRelocationViewModel(private val interactor: ConnectionInteractor) : Vie
     }
 
     fun request() {
-        if (isVinEmpty()) {
+        if (isErrorVin) {
             _stateErrorVin.value = true
             if (isFieldsEmpty()) {
                 _stateErrorFields.value = true
@@ -101,10 +101,6 @@ class CarRelocationViewModel(private val interactor: ConnectionInteractor) : Vie
 
     fun setDefaultState() {
         _state.value = ScreenState.Default
-    }
-
-    private fun isVinEmpty(): Boolean {
-        return vin.isEmpty()
     }
 
     private fun isFieldsEmpty(): Boolean {

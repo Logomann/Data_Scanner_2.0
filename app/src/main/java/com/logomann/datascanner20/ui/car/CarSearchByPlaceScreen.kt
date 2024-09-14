@@ -5,8 +5,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,19 +22,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.car.view_model.CarSearchByPlaceViewModel
 import com.logomann.datascanner20.ui.screens.CreateButtonsRow
 import com.logomann.datascanner20.ui.screens.CreateCompoundField
 import com.logomann.datascanner20.ui.screens.LoadingScreen
-import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
+import com.logomann.datascanner20.ui.theme.green
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -58,11 +70,19 @@ fun CarSearchByPlaceScreen(
         is ScreenState.Content -> {
             viewModel.isErrorMessage = false
             isLoading = false
-            SnackbarMessage(
-                message = collectState.message.toString(),
-                snackbarHostState = snackbarHostState,
-                scope = scope
-            )
+            val actionName = stringResource(id = R.string.ok)
+            LaunchedEffect(Unit) {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = collectState.message.toString(),
+                        actionLabel = actionName
+                    )
+                    when (result) {
+                        SnackbarResult.Dismissed -> {}
+                        SnackbarResult.ActionPerformed -> {}
+                    }
+                }
+            }
             viewModel.setDefaultState()
             viewModel.clearEditTexts()
         }
@@ -166,14 +186,54 @@ fun CarSearchByPlaceScreen(
                 onClickOk = { viewModel.request() },
                 onClickClear = { viewModel.clearEditTexts() })
             val snack = createRef()
-            CreateSnackbarHost(
+            CreateSnackbarHostForAction(
                 snackbarHostState = snackbarHostState,
                 viewModel.isErrorMessage,
                 modifier = Modifier
                     .constrainAs(snack) {
-                        bottom.linkTo(parent.bottom,100.dp)
+                        bottom.linkTo(parent.bottom, 100.dp)
                     }
             )
         }
+    }
+}
+
+@Composable
+fun CreateSnackbarHostForAction(
+    snackbarHostState: SnackbarHostState,
+    isError: Boolean,
+    modifier: Modifier
+) {
+    SnackbarHost(
+        snackbarHostState,
+        modifier = modifier
+            .fillMaxWidth()
+    ) { data ->
+        Snackbar(
+            containerColor = if (isError) MaterialTheme.colorScheme.error else green,
+            modifier = Modifier.padding(16.dp),
+            content = {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = data.visuals.message,
+                        color = Color.White,
+                        modifier = Modifier.clip(RoundedCornerShape(8.dp))
+                    )
+                    if(!isError) {
+                        TextButton(
+                            onClick = { snackbarHostState.currentSnackbarData?.dismiss() }) {
+                            Text(
+                                color = Color.White,
+                                text = data.visuals.actionLabel.toString()
+                            )
+                        }
+                    }
+
+                }
+            })
     }
 }
