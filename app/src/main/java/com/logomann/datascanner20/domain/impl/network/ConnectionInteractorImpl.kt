@@ -1,6 +1,5 @@
 package com.logomann.datascanner20.domain.impl.network
 
-
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.domain.network.ConnectionInteractor
 import com.logomann.datascanner20.domain.network.ConnectionRepository
@@ -11,10 +10,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class ConnectionInteractorImpl(private val repository: ConnectionRepository) :
     ConnectionInteractor {
-
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun request(model: ConnectionModel, onComplete: (String?, Int) -> Unit) {
@@ -33,12 +30,10 @@ class ConnectionInteractorImpl(private val repository: ConnectionRepository) :
             delay(10000L)
             if (job.isActive) {
                 job.cancel()
-                onComplete("",2)
+                onComplete("", 2)
             }
         }
 
-
     }
-
 }
 

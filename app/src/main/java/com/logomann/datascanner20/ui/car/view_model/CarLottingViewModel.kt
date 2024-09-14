@@ -1,69 +1,120 @@
 package com.logomann.datascanner20.ui.car.view_model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.domain.network.ConnectionInteractor
 import com.logomann.datascanner20.ui.ScreenState
 import com.logomann.datascanner20.util.CAR_LOTTING_CODE
+import com.logomann.datascanner20.util.debounce
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class CarLottingViewModel(private val interactor: ConnectionInteractor) : ViewModel() {
 
-    private var driver = ""
-    private val lot = mutableListOf<String>()
-    private val screenStateLiveData =
-        MutableLiveData<ScreenState>(ScreenState.Default)
+    private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
+    val state: StateFlow<ScreenState> = _state
+
+    private val _stateErrorFields = MutableStateFlow(false)
+    val stateErrorFields: StateFlow<Boolean> = _stateErrorFields
+
+    private val _stateErrorList = MutableStateFlow(false)
+    val stateErrorList: StateFlow<Boolean> = _stateErrorList
+
+    private val _stateIsClickable = MutableStateFlow(true)
+    val stateIsClickable: StateFlow<Boolean> = _stateIsClickable
+
+    var vin by mutableStateOf("")
+    var lot = mutableStateListOf<String>()
+    var driver by mutableStateOf("")
+    var isErrorVin by mutableStateOf(false)
+    var isErrorDriver by mutableStateOf(false)
+    var isErrorMessage by mutableStateOf(false)
+
+    private val vinOnClickDebounce =
+        debounce<Boolean>(2000L, viewModelScope, false) {
+            _stateIsClickable.value = it
+        }
+    fun onVinClicked() {
+        vinOnClickDebounce(true)
+    }
 
     private fun update() {
-        setScreenState(ScreenState.Loading)
+        _state.value = ScreenState.Loading
         interactor.request(
             ConnectionModel.Driver(driver, CAR_LOTTING_CODE, lot), onComplete = { data, code ->
                 if (data == null) {
-                    screenStateLiveData.postValue(ScreenState.NoInternet)
+                    _state.value = ScreenState.NoInternet
                 } else if (code == 1) {
-                    screenStateLiveData.postValue(ScreenState.Content(data))
+                    _state.value = ScreenState.Content(data)
                 } else if (code == 2) {
-                    screenStateLiveData.postValue(ScreenState.ServerError)
+                    _state.value = ScreenState.ServerError
                 } else {
-                    screenStateLiveData.postValue(ScreenState.Error(data))
+                    _state.value = ScreenState.Error(data)
                 }
 
             })
     }
 
-    private fun setScreenState(state: ScreenState) {
-        screenStateLiveData.postValue(state)
-    }
 
-    fun request(driver: String) {
-        this.driver = driver
-        update()
-    }
-
-    fun addToList(vin: String) {
-        if (!lot.contains(vin)) {
-            lot.add(vin)
-            screenStateLiveData.postValue(ScreenState.ListRefreshed(lot))
+    fun request() {
+        if (driver.isNotEmpty() && lot.isNotEmpty()) {
+            update()
+        } else {
+            _stateErrorFields.value = true
         }
+    }
 
+    fun addToList() {
+        if (vin.isNotEmpty()) {
+            if (!lot.contains(vin)) {
+                lot.add(vin)
+            } else {
+                _stateErrorList.value = true
+            }
+        } else {
+            _stateErrorFields.value = true
+        }
+    }
+
+    fun clearFields() {
+        vin = ""
+        driver = ""
     }
 
     fun clearList() {
         lot.clear()
-        screenStateLiveData.postValue(ScreenState.ListRefreshed(lot))
     }
 
     fun removeFromList(vin: String) {
         if (lot.contains(vin)) {
             lot.remove(vin)
-            screenStateLiveData.postValue(ScreenState.ListRefreshed(lot))
         }
     }
 
     fun setCameraResult(result: String) {
-        screenStateLiveData.postValue(ScreenState.CameraResult(result))
+        vin = result
+        _state.value = ScreenState.CameraResult(result)
     }
 
-    fun getScreenStateLiveData(): LiveData<ScreenState> = screenStateLiveData
+    fun setDefaultState() {
+        _state.value = ScreenState.Default
+    }
+
+    fun setDefaultErrorFieldsState() {
+        _stateErrorFields.value = false
+    }
+
+    fun setDefaultErrorListState() {
+        _stateErrorList.value = false
+    }
+
+    fun setIsClickableState() {
+        _stateIsClickable.value = false
+    }
+
 }

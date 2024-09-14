@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/DataScanner20"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="35">
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
@@ -26,7 +27,9 @@
         <activity
             android:name=".ui.main.activity.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

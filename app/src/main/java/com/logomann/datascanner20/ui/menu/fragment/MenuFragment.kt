@@ -8,10 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.logomann.datascanner20.R
 import com.logomann.datascanner20.databinding.FragmentMenuBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-
 
 class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
@@ -42,6 +41,5 @@ class MenuFragment : Fragment() {
         _binding = null
         super.onDestroy()
     }
-
 
 }

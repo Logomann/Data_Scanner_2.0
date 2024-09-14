@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="authorization">Авторизация</string>
-    <string name="input_pin">Введите PIN код</string>
+    <string name="input_pin">PIN код</string>
     <string name="ok">OK</string>
     <string name="repeat">Повторить</string>
     <string name="vin_code">VIN</string>
@@ -17,9 +17,9 @@
     <string name="lot_in_ladung">Лот в ладунге</string>
     <string name="loading_sheet">Погрузочный лист</string>
     <string name="car_lotting">Лотирование</string>
-    <string name="driver">Вод</string>
+    <string name="driver">Код водителя</string>
     <string name="way">Путь</string>
-    <string name="wagon">Вагон</string>
+    <string name="wagon">Номер вагона</string>
     <string name="take_shot">Сделать снимок</string>
     <string name="car_operations">Автомобили</string>
     <string name="container_operations">Контейнеры</string>
@@ -30,7 +30,7 @@
     <string name="server_error">Ошибка сервера</string>
     <string name="nointernet">Нет интернета</string>
     <string name="sector">Сектор</string>
-    <string name="enter_container_number">Введите номер контейнера</string>
+    <string name="enter_container_number">Номер контейнера</string>
     <string name="container_arrival">Приход контейнеров</string>
     <string name="container_in_carriage">Контейнер в вагоне</string>
     <string name="enter_carriage_number">Введите номер вагона</string>
@@ -43,4 +43,18 @@
     <string name="enter_row">Введите номер ряда</string>
     <string name="enter_driver_code">Введите код водителя</string>
     <string name="vin_already_in_list">VIN уже в списке!</string>
+    <string name="vin_support_error">%1$s не может быть меньше %2$s</string>
+    <string name="pin_can_t_be_empty">Pin не может быть пустым</string>
+    <string name="cancel">Отмена</string>
+    <string name="tsd">Выбран ТСД склада:</string>
+    <string name="naro_fominsk">Наро-Фоминск</string>
+    <string name="golytsino">Голицыно</string>
+    <string name="beloostrov">Белоостров</string>
+    <string name="akulovo">Акулово</string>
+    <plurals name="symbol_plurals">
+        <item quantity="one">%s символа</item>
+        <item quantity="few">%s символов</item>
+        <item quantity="many">%s символов</item>
+        <item quantity="other">%s символов</item>
+    </plurals>
 </resources>

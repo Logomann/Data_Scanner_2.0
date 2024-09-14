@@ -38,52 +38,6 @@ class ContainerArrivalFragment : Fragment() {
         binding.containerBtnClear.setOnClickListener {
             clearText()
         }
-        binding.containerBtnOk.setOnClickListener {
-            if (checkRequest()) {
-                hideKeyboard()
-                viewModel.request(
-                    containerNumber.text.toString(),
-                    fieldEt.text.toString().toInt(),
-                    rowEt.text.toString().toInt(),
-                    cellEt.text.toString().toInt()
-                )
-            }
-
-        }
-        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) { screenState ->
-            when (screenState) {
-                is ScreenState.CameraResult -> {}
-                is ScreenState.Content -> {
-                    showGroup()
-                    showMessage(screenState.message.toString(), false)
-                    clearText()
-                }
-
-                ScreenState.Default -> {}
-                is ScreenState.Error -> {
-                    showGroup()
-                    showMessage(screenState.message.toString(), true)
-                }
-
-                ScreenState.Loading -> {
-                    hideGroup()
-                }
-
-                ScreenState.NoInternet -> {
-                    showGroup()
-                    showMessage(getString(R.string.nointernet), true)
-                }
-
-                ScreenState.ServerError -> {
-                    showGroup()
-                    showMessage(getString(R.string.server_error), true)
-                }
-
-                is ScreenState.ListRefreshed -> {}
-                is ScreenState.AddressCleared -> TODO()
-            }
-
-        }
         return binding.root
     }
     override fun onDestroy() {

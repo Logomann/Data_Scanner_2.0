@@ -132,9 +132,7 @@ class CameraFragment : Fragment() {
                     return@MlKitAnalyzer
                 }
                 viewModel.setResult(barcodeResults[0])
-
                 previewView.overlay.clear()
-
             }
         )
         cameraController!!.bindToLifecycle(this)
@@ -152,7 +150,6 @@ class CameraFragment : Fragment() {
     }
 
     private fun switchFlash() {
-
         if (cameraController!!.cameraInfo!!.hasFlashUnit())
             isTorchOn = if (isTorchOn) {
                 cameraController!!.cameraControl!!.enableTorch(false)
@@ -165,7 +162,6 @@ class CameraFragment : Fragment() {
                     requireActivity().getColorStateList(R.color.yellow)
                 true
             }
-
     }
 
     companion object {

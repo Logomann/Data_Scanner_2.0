@@ -1,54 +1,91 @@
 package com.logomann.datascanner20.ui.container.view_model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.domain.network.ConnectionInteractor
 import com.logomann.datascanner20.ui.ScreenState
 import com.logomann.datascanner20.util.CONTAINER_ARRIVAL
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 
 class ContainerArrivalViewModel(private val interactor: ConnectionInteractor) : ViewModel() {
-    private var number = ""
-    private var field = 0
-    private var sector = 0
-    private var cell = 0
+    var containerNumber by mutableStateOf("")
+    var field by mutableStateOf("")
+    var row by mutableStateOf("")
+    var cell by mutableStateOf("")
+    var isContainerError by mutableStateOf(false)
+    var isErrorField by mutableStateOf(false)
+    var isErrorRow by mutableStateOf(false)
+    var isErrorCell by mutableStateOf(false)
+    var isErrorMessage by mutableStateOf(false)
 
-    private val screenStateLiveData =
-        MutableLiveData<ScreenState>(ScreenState.Default)
+    private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
+    val state: StateFlow<ScreenState> = _state
 
     private fun setContainerAddress() {
-        setScreenState(ScreenState.Loading)
+        _state.value = ScreenState.Loading
         interactor.request(
             ConnectionModel.Container(
-                number, ConnectionModel.Address(field, sector, cell, 0),
-                CONTAINER_ARRIVAL, null
+                containerNumber,
+                ConnectionModel.Address(field.toInt(), row.toInt(), cell.toInt(), 0),
+                CONTAINER_ARRIVAL,
+                null
             ), onComplete = { data, code ->
                 if (data == null) {
-                    screenStateLiveData.postValue(ScreenState.NoInternet)
+                    _state.value = ScreenState.NoInternet
                 } else if (code == 1) {
-                    screenStateLiveData.postValue(ScreenState.Content(data))
+                    _state.value = ScreenState.Content(data)
                 } else if (code == 2) {
-                    screenStateLiveData.postValue(ScreenState.ServerError)
+                    _state.value = ScreenState.ServerError
                 } else {
-                    screenStateLiveData.postValue(ScreenState.Error(data))
+                    _state.value = ScreenState.Error(data)
                 }
-
             })
     }
 
-    private fun setScreenState(state: ScreenState) {
-        screenStateLiveData.postValue(state)
+    fun request() {
+        isFieldsEmpty()
+        if (!isError()) {
+            setContainerAddress()
+        }
     }
 
-    fun request(number: String, field: Int, sector: Int, cell: Int) {
-        this.number = number
-        this.field = field
-        this.sector = sector
-        this.cell = cell
-        setContainerAddress()
+    fun setDefaultState() {
+        _state.value = ScreenState.Default
     }
 
-    fun getScreenStateLiveData(): LiveData<ScreenState> = screenStateLiveData
+    private fun isFieldsEmpty() {
+        if (containerNumber.isEmpty()) {
+            isContainerError = true
+        }
+        if (field.isEmpty()) {
+            isErrorField = true
+        }
+        if (row.isEmpty()) {
+            isErrorRow = true
+        }
+        if (cell.isEmpty()) {
+            isErrorCell = true
+        }
+    }
+
+    private fun isError(): Boolean {
+        return isContainerError || isErrorRow || isErrorCell || isErrorField
+    }
+
+    fun clearFields() {
+        containerNumber = ""
+        field = ""
+        row = ""
+        cell = ""
+        isContainerError = false
+        isErrorField = false
+        isErrorRow = false
+        isErrorCell = false
+    }
+
 }

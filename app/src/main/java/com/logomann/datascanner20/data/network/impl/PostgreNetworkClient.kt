@@ -18,6 +18,7 @@ import java.sql.Statement
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import org.postgresql.util.PSQLException
 
 
 class PostgreNetworkClient(
@@ -211,8 +212,16 @@ class PostgreNetworkClient(
     }
 
     private fun getConnectionStatement(): Statement {
-        val connection = SQLConnection().getPostgreSQL()
-        return connection.createStatement()
+        try {
+            val connection = SQLConnection().getPostgreSQL()
+            return connection.createStatement()
+        }
+        catch (e: PSQLException) {
+            Thread.currentThread().interrupt()
+            val connection = SQLConnection().getPostgreSQL()
+            return connection.createStatement()
+        }
+
     }
 
     private fun requestCell(address: ConnectionModel.Address): Response {

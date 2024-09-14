@@ -53,73 +53,11 @@ class CarLottingFragment : Fragment() {
         binding.carLottingBtnClear.setOnClickListener {
             clearText()
         }
-        binding.carLottingAddBtn.setOnClickListener {
-            if (checkAddToList()) {
-                viewModel.addToList(vinCode.text.toString())
-            }
-        }
-        binding.carLottingOkBtn.setOnClickListener {
-            if (checkRequest()) {
-                hideKeyboard()
-                viewModel.request(driver.text.toString())
-            }
-        }
+
 
         val driverRecyclerView = binding.carLottingRecycler
         driverRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         driverRecyclerView.adapter = adapter
-        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) { screenState ->
-            when (screenState) {
-                is ScreenState.CameraResult -> {
-                    vinCode.setText(screenState.result)
-                }
-
-                is ScreenState.Content -> {
-                    showGroup()
-                    showMessage(screenState.message.toString(),false)
-                    clearText()
-                    viewModel.clearList()
-                }
-
-                ScreenState.Default -> {}
-                is ScreenState.Error -> {
-                    showGroup()
-                    showCreateLotBtn()
-                    showMessage(screenState.message.toString(),true)
-                }
-
-                ScreenState.Loading -> {
-                    hideKeyboard()
-                    hideGroup()
-                }
-
-                ScreenState.NoInternet -> {
-                    showGroup()
-                    showCreateLotBtn()
-                    showMessage(getString(R.string.nointernet),true)
-                }
-
-                ScreenState.ServerError -> {
-                    showGroup()
-                    showCreateLotBtn()
-                    showMessage(getString(R.string.server_error),true)
-                }
-
-                is ScreenState.ListRefreshed -> {
-                    listOfCars.clear()
-                    listOfCars.addAll(screenState.list)
-                    if (listOfCars.isEmpty()) {
-                        hideCreateBtn()
-                    } else {
-                        showCreateLotBtn()
-                    }
-                    adapter.notifyDataSetChanged()
-                }
-
-                is ScreenState.AddressCleared -> {}
-            }
-
-        }
         return binding.root
     }
 

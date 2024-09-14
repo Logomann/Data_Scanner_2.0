@@ -1,8 +1,6 @@
 package com.logomann.datascanner20.ui.settings.fragment
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,8 +32,7 @@ class SettingsFragment : Fragment() {
         binding.settingsArrow.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.settingsScannerIdEt.setText(getScannerID().toString())
-        binding.settingsScannerIdEt.addTextChangedListener(setTextWatcher())
+
         binding.settingsSwitch.setOnClickListener {
             viewModel.switchTheme()
         }
@@ -45,27 +42,7 @@ class SettingsFragment : Fragment() {
         super.onDestroy()
     }
 
-    private fun getScannerID(): Int {
-        return viewModel.getScannerID()
-    }
 
-    private fun setTextWatcher(): TextWatcher {
-        val editTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-            }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(!s.isNullOrEmpty()) {
-                    viewModel.setScannerID(binding.settingsScannerIdEt.text.toString().toInt())
-                }
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        }
-        return editTextWatcher
-    }
 }
