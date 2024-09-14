@@ -81,7 +81,7 @@ class MainActivity : BaseActivity() {
                         }
                         composable(Screen.Container.route) {
                             bottomBarVisibility = true
-                            ContainerMainScreen(navController)
+                            ContainerMainScreen()
                         }
                         composable(Screen.Loading.route) {
                             bottomBarVisibility = false
