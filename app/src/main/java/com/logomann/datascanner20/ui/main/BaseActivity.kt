@@ -43,12 +43,6 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
 
-    fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            this, it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
     fun requestPermissions() {
         activityResultLauncher.launch(REQUIRED_PERMISSIONS)
     }
