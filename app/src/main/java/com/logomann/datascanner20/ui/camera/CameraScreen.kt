@@ -1,4 +1,4 @@
-package com.logomann.datascanner20.ui.screens
+package com.logomann.datascanner20.ui.camera
 
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
@@ -33,7 +33,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.logomann.datascanner20.ui.camera.CameraScreenState
 import com.logomann.datascanner20.ui.camera.view_model.CameraViewModel
 import com.logomann.datascanner20.util.CAMERA_RESULT
 import kotlinx.coroutines.delay

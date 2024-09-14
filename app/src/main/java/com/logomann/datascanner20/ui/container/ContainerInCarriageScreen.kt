@@ -1,4 +1,4 @@
-package com.logomann.datascanner20.ui.screens
+package com.logomann.datascanner20.ui.container
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,8 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.ScreenState
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.container.view_model.ContainerInCarriageViewModel
+import com.logomann.datascanner20.ui.screens.CreateButtonsRow
+import com.logomann.datascanner20.ui.screens.CreateVinField
+import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
+import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import org.koin.androidx.compose.koinViewModel
 
 const val WAGON_NUMBER_LENGTH = 8
@@ -70,8 +75,6 @@ fun ContainerInCarriage(
                 )
                 viewModel.setDefaultState()
             }
-
-            is ScreenState.ListRefreshed -> {}
             ScreenState.Loading -> {
                 isLoading = true
                 LoadingScreen()

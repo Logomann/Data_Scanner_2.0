@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.logomann.datascanner20.domain.settings.SettingsInteractor
-import com.logomann.datascanner20.ui.screens.MAXIMUM_TSD
+import com.logomann.datascanner20.ui.settings.MAXIMUM_TSD
 
 class SettingsViewModel(private val interactor: SettingsInteractor) : ViewModel() {
 

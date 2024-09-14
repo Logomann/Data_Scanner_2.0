@@ -30,12 +30,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.ScreenState
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.authorization.view_model.AuthorizationViewModel
-import com.logomann.datascanner20.ui.screens.CreateSnackbarHost
+import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
 import com.logomann.datascanner20.ui.screens.LoadingScreen
 import com.logomann.datascanner20.ui.screens.Screen
-import com.logomann.datascanner20.ui.screens.SnackbarMessage
+import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 
@@ -87,10 +87,9 @@ fun Authorization(
                 scope = scopeCurrent
             )
             viewModel.isResumed = true
-            // viewModel.setDefaultState()
+            viewModel.setDefaultState()
         }
 
-        is ScreenState.ListRefreshed -> {}
         ScreenState.Loading -> {
             isLoading = true
             LoadingScreen()

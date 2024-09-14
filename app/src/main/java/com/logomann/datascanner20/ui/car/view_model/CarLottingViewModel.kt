@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.domain.network.ConnectionInteractor
-import com.logomann.datascanner20.ui.ScreenState
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.util.CAR_LOTTING_CODE
 import com.logomann.datascanner20.util.debounce
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -111,10 +111,6 @@ class CarLottingViewModel(private val interactor: ConnectionInteractor) : ViewMo
 
     fun setDefaultErrorListState() {
         _stateErrorList.value = false
-    }
-
-    fun setIsClickableState() {
-        _stateIsClickable.value = false
     }
 
 }

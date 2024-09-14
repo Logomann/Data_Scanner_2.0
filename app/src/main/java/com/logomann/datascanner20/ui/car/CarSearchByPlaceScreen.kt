@@ -1,4 +1,4 @@
-package com.logomann.datascanner20.ui.screens
+package com.logomann.datascanner20.ui.car
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,28 +17,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.ScreenState
-import com.logomann.datascanner20.ui.container.view_model.ContainerArrivalViewModel
+import com.logomann.datascanner20.ui.screens.ScreenState
+import com.logomann.datascanner20.ui.car.view_model.CarSearchByPlaceViewModel
+import com.logomann.datascanner20.ui.screens.CreateButtonsRow
+import com.logomann.datascanner20.ui.screens.CreateCompoundField
+import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
+import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import org.koin.androidx.compose.koinViewModel
 
-const val CONTAINER_NUMBER_LENGTH = 11
 
 @Composable
-fun ContainerArrivalScreen(
-    viewModel: ContainerArrivalViewModel = koinViewModel()
+fun CarSearchByPlaceScreen(
+    viewModel: CarSearchByPlaceViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsState()
+    val stateErrorFields = viewModel.stateErrorFields.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    fun validateContainer(container: String) {
-        viewModel.isContainerError = container.length < CONTAINER_NUMBER_LENGTH
+    fun validateField(field: String) {
+        viewModel.isErrorField = field.length < ROW_MINIMUM_SYMBOLS
+    }
+
+    fun validateRow(row: String) {
+        viewModel.isErrorRow = row.length < ROW_MINIMUM_SYMBOLS
+    }
+
+    fun validateCell(cell: String) {
+        viewModel.isErrorCell = cell.length < ROW_MINIMUM_SYMBOLS
     }
 
     when (val collectState = state.value) {
@@ -53,7 +64,7 @@ fun ContainerArrivalScreen(
                 scope = scope
             )
             viewModel.setDefaultState()
-            viewModel.clearFields()
+            viewModel.clearEditTexts()
         }
 
         ScreenState.Default -> {}
@@ -68,7 +79,6 @@ fun ContainerArrivalScreen(
             viewModel.setDefaultState()
         }
 
-        is ScreenState.ListRefreshed -> {}
         ScreenState.Loading -> {
             isLoading = true
             LoadingScreen()
@@ -97,35 +107,27 @@ fun ContainerArrivalScreen(
         }
     }
 
-    ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        if (!isLoading) {
-            val (container, row) = createRefs()
-            CreateVinField(
-                text = { viewModel.containerNumber },
-                setText = { viewModel.containerNumber = it },
-                charMax = CONTAINER_NUMBER_LENGTH,
-                charMin = CONTAINER_NUMBER_LENGTH,
-                validateVin = { validateContainer(it) },
-                name = stringResource(id = R.string.enter_container_number),
-                isError = viewModel.isContainerError,
-                trailingIconEndPadding = 0,
-                modifier = Modifier
-                    .padding(top = dimensionResource(id = R.dimen.vin_row_top_padding))
-                    .constrainAs(container) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    })
+    if (stateErrorFields.value) {
+        validateField(viewModel.field)
+        validateRow(viewModel.row)
+        validateCell(viewModel.cell)
+    } else {
+        viewModel.isErrorField = false
+        viewModel.isErrorRow = false
+        viewModel.isErrorCell = false
+    }
+
+    if (!isLoading) {
+        ConstraintLayout(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val row = createRef()
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp)
+                    .padding(top = dimensionResource(id = R.dimen.vin_row_top_padding))
                     .constrainAs(row) {
-                        top.linkTo(container.bottom)
                     }
             ) {
                 CreateCompoundField(
@@ -159,25 +161,19 @@ fun ContainerArrivalScreen(
             val btnRow = createRef()
             CreateButtonsRow(
                 modifier = Modifier.constrainAs(btnRow) {
-                    top.linkTo(row.bottom, 12.dp)
+                    top.linkTo(row.bottom)
                 },
                 onClickOk = { viewModel.request() },
-                onClickClear = { viewModel.clearFields() })
+                onClickClear = { viewModel.clearEditTexts() })
             val snack = createRef()
             CreateSnackbarHost(
                 snackbarHostState = snackbarHostState,
                 viewModel.isErrorMessage,
-                modifier = Modifier.constrainAs(snack) {
-                    bottom.linkTo(parent.bottom, 100.dp)
-                }
+                modifier = Modifier
+                    .constrainAs(snack) {
+                        bottom.linkTo(parent.bottom,100.dp)
+                    }
             )
         }
-
     }
-}
-
-@Preview
-@Composable
-fun ContainerPreview() {
-    ContainerArrivalScreen()
 }

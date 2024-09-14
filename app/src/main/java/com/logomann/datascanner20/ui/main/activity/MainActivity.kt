@@ -21,15 +21,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.ui.authorization.Authorization
-import com.logomann.datascanner20.ui.camera.BaseActivity
+import com.logomann.datascanner20.ui.main.BaseActivity
 import com.logomann.datascanner20.ui.menu.BottomNavigationBar
-import com.logomann.datascanner20.ui.screens.Camera
-import com.logomann.datascanner20.ui.screens.CarMainScreen
-import com.logomann.datascanner20.ui.screens.ContainerMainScreen
-import com.logomann.datascanner20.ui.screens.CreateSnackbarHost
+import com.logomann.datascanner20.ui.camera.Camera
+import com.logomann.datascanner20.ui.car.CarMainScreen
+import com.logomann.datascanner20.ui.container.ContainerMainScreen
+import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
 import com.logomann.datascanner20.ui.screens.LoadingScreen
 import com.logomann.datascanner20.ui.screens.Screen
-import com.logomann.datascanner20.ui.screens.Settings
+import com.logomann.datascanner20.ui.settings.Settings
 import com.logomann.datascanner20.ui.theme.DataScanner20Theme
 
 class MainActivity : BaseActivity() {

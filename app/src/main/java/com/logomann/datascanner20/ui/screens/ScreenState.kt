@@ -1,4 +1,4 @@
-package com.logomann.datascanner20.ui
+package com.logomann.datascanner20.ui.screens
 
 sealed class ScreenState {
     data class Error(val message: String?) : ScreenState()
@@ -9,5 +9,4 @@ sealed class ScreenState {
     data object Loading : ScreenState()
     data class CameraResult(val result: String) : ScreenState()
     data object ServerError : ScreenState()
-    data class ListRefreshed(val list: MutableList<String>) : ScreenState()
 }

@@ -1,15 +1,8 @@
-package com.logomann.datascanner20.ui.screens
+package com.logomann.datascanner20.ui.car
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,29 +14,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.ScreenState
-import com.logomann.datascanner20.ui.theme.yellow
+import com.logomann.datascanner20.ui.screens.ScreenState
+import com.logomann.datascanner20.ui.car.view_model.CarSearchByVINViewModel
+import com.logomann.datascanner20.ui.screens.CreateButtonsRow
+import com.logomann.datascanner20.ui.screens.CreateCameraButton
+import com.logomann.datascanner20.ui.screens.CreateVinField
+import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
+import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import com.logomann.datascanner20.util.CAMERA_RESULT
 import org.koin.androidx.compose.koinViewModel
-import com.logomann.datascanner20.ui.car.view_model.CarRelocationViewModel as CarRelocationViewModel1
 
-const val VIN_MINIMUM_SYMBOLS = 17
-const val ROW_MINIMUM_SYMBOLS = 1
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CarRelocationScreen(
+fun CarSearchByVinScreen(
     navController: NavController,
-    viewModel: CarRelocationViewModel1 = koinViewModel()
+    viewModel: CarSearchByVINViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsState()
     val stateErrorFields = viewModel.stateErrorFields.collectAsState()
-    val stateErrorVin = viewModel.stateErrorVin.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -51,34 +46,11 @@ fun CarRelocationScreen(
         ?.savedStateHandle
         ?.get<String>(CAMERA_RESULT)
 
-
     fun validateVin(vin: String) {
         viewModel.isErrorVin = vin.length < VIN_MINIMUM_SYMBOLS
     }
-
-    fun validateField(field: String) {
-        viewModel.isErrorField = field.length < ROW_MINIMUM_SYMBOLS
-    }
-
-    fun validateRow(row: String) {
-        viewModel.isErrorRow = row.length < ROW_MINIMUM_SYMBOLS
-    }
-
-    fun validateCell(cell: String) {
-        viewModel.isErrorCell = cell.length < ROW_MINIMUM_SYMBOLS
-    }
     when (val collectState = state.value) {
-        is ScreenState.AddressCleared -> {
-            viewModel.isErrorMessage = false
-            isLoading = false
-            SnackbarMessage(
-                message = collectState.message.toString(),
-                snackbarHostState = snackbarHostState,
-                scope = scope
-            )
-            viewModel.setDefaultState()
-        }
-
+        is ScreenState.AddressCleared -> {}
         is ScreenState.CameraResult -> {
             validateVin(collectState.result)
             viewModel.setDefaultState()
@@ -92,8 +64,8 @@ fun CarRelocationScreen(
                 snackbarHostState = snackbarHostState,
                 scope = scope
             )
-            viewModel.clearEditTexts()
             viewModel.setDefaultState()
+            viewModel.clearVin()
         }
 
         ScreenState.Default -> {}
@@ -108,7 +80,6 @@ fun CarRelocationScreen(
             viewModel.setDefaultState()
         }
 
-        is ScreenState.ListRefreshed -> {}
         ScreenState.Loading -> {
             isLoading = true
             LoadingScreen()
@@ -136,26 +107,16 @@ fun CarRelocationScreen(
             viewModel.setDefaultState()
         }
     }
+
     if (stateErrorFields.value) {
-        validateField(viewModel.field)
-        validateRow(viewModel.row)
-        validateCell(viewModel.cell)
-    } else {
-        viewModel.isErrorField = false
-        viewModel.isErrorRow = false
-        viewModel.isErrorCell = false
-    }
-    if (stateErrorVin.value) {
         validateVin(viewModel.vin)
-    } else {
-        viewModel.isErrorVin = false
     }
 
     if (!isLoading) {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
         ) {
-            val (vinRow, cameraBtn, editTexts, box) = createRefs()
+            val (vinRow, cameraBtn) = createRefs()
 
             if (cameraScreenResult?.isNotEmpty() == true) {
                 viewModel.setCameraResult(cameraScreenResult.toString())
@@ -173,88 +134,35 @@ fun CarRelocationScreen(
                     .constrainAs(vinRow) {
                     }
             )
-
             CreateCameraButton(
                 navController = navController,
                 modifier = Modifier.constrainAs(cameraBtn) {
                     top.linkTo(vinRow.top)
                     end.linkTo(parent.end)
                 })
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier
-                    .constrainAs(editTexts) {
-                        top.linkTo(vinRow.bottom)
-                    }
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                CreateCompoundField(
-                    text = { viewModel.field },
-                    setText = { viewModel.field = it },
-                    charMax = 2,
-                    isError = viewModel.isErrorField,
-                    setError = { viewModel.isErrorField = it },
-                    modifier = Modifier,
-                    name = stringResource(id = R.string.field)
-                )
-                CreateCompoundField(
-                    text = { viewModel.row },
-                    setText = { viewModel.row = it },
-                    charMax = 3,
-                    isError = viewModel.isErrorRow,
-                    setError = { viewModel.isErrorRow = it },
-                    modifier = Modifier,
-                    name = stringResource(id = R.string.row)
-                )
-                CreateCompoundField(
-                    text = { viewModel.cell },
-                    setText = { viewModel.cell = it },
-                    charMax = 2,
-                    isError = viewModel.isErrorCell,
-                    setError = { viewModel.isErrorCell = it },
-                    modifier = Modifier,
-                    name = stringResource(id = R.string.cell)
-                )
-            }
             val btnRow = createRef()
             CreateButtonsRow(
                 modifier = Modifier.constrainAs(btnRow) {
-                    top.linkTo(editTexts.bottom)
+                    top.linkTo(vinRow.bottom)
                 },
                 onClickOk = { viewModel.request() },
-                onClickClear = { viewModel.clearEditTexts() })
-
-            val clearBtn = createRef()
-            Button(
-                onClick = { viewModel.clearCell() },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = yellow
-                ),
-                modifier = Modifier
-                    .padding(top = 24.dp)
-                    .constrainAs(clearBtn) {
-                        top.linkTo(btnRow.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.clear_cell),
-                    fontSize = 20.sp
-                )
-            }
+                onClickClear = { viewModel.clearVin() })
+            val snack = createRef()
             CreateSnackbarHost(
                 snackbarHostState = snackbarHostState,
                 viewModel.isErrorMessage,
                 modifier = Modifier
-                    .constrainAs(box) {
+                    .constrainAs(snack) {
                         bottom.linkTo(parent.bottom, 100.dp)
                     }
             )
         }
     }
+
 }
 
-
+@Preview
+@Composable
+fun CarSearchByVinScreenPreview() {
+    CarSearchByVinScreen(rememberNavController())
+}

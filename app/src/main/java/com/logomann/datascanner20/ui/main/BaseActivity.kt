@@ -1,4 +1,4 @@
-package com.logomann.datascanner20.ui.camera
+package com.logomann.datascanner20.ui.main
 
 import android.Manifest
 import android.content.pm.PackageManager

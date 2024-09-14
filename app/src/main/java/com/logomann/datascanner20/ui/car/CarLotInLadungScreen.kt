@@ -1,4 +1,4 @@
-package com.logomann.datascanner20.ui.screens
+package com.logomann.datascanner20.ui.car
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,8 +20,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.ScreenState
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.car.view_model.CarLotInLadungViewModel
+import com.logomann.datascanner20.ui.screens.CreateButtonsRow
+import com.logomann.datascanner20.ui.screens.CreateCameraButton
+import com.logomann.datascanner20.ui.screens.CreateVinField
+import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
+import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import com.logomann.datascanner20.util.CAMERA_RESULT
 import org.koin.androidx.compose.koinViewModel
 
@@ -80,7 +86,6 @@ fun CarLotInLadungScreen(
             viewModel.setDefaultState()
         }
 
-        is ScreenState.ListRefreshed -> {}
         ScreenState.Loading -> {
             isLoading = true
             LoadingScreen()

@@ -1,4 +1,4 @@
-package com.logomann.datascanner20.ui.screens
+package com.logomann.datascanner20.ui.settings
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable

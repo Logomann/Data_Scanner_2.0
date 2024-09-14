@@ -1,17 +1,13 @@
-package com.logomann.datascanner20.ui.screens
+package com.logomann.datascanner20.ui.car
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,35 +18,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.ScreenState
-import com.logomann.datascanner20.ui.car.view_model.CarLottingViewModel
+import com.logomann.datascanner20.ui.screens.ScreenState
+import com.logomann.datascanner20.ui.screens.CreateButtonsRow
+import com.logomann.datascanner20.ui.screens.CreateCameraButton
+import com.logomann.datascanner20.ui.screens.CreateCompoundField
+import com.logomann.datascanner20.ui.screens.CreateVinField
+import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
+import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import com.logomann.datascanner20.ui.theme.yellow
 import com.logomann.datascanner20.util.CAMERA_RESULT
 import org.koin.androidx.compose.koinViewModel
+import com.logomann.datascanner20.ui.car.view_model.CarRelocationViewModel as CarRelocationViewModel1
 
-const val DRIVER_MAXIMUM_SYMBOLS = 4
+const val VIN_MINIMUM_SYMBOLS = 17
+const val ROW_MINIMUM_SYMBOLS = 1
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CarLottingScreen(
+fun CarRelocationScreen(
     navController: NavController,
-    viewModel: CarLottingViewModel = koinViewModel()
+    viewModel: CarRelocationViewModel1 = koinViewModel()
 ) {
     val state = viewModel.state.collectAsState()
     val stateErrorFields = viewModel.stateErrorFields.collectAsState()
-    val stateErrorList = viewModel.stateErrorList.collectAsState()
-    val stateIsClickable = viewModel.stateIsClickable.collectAsState()
+    val stateErrorVin = viewModel.stateErrorVin.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -58,15 +58,34 @@ fun CarLottingScreen(
         ?.savedStateHandle
         ?.get<String>(CAMERA_RESULT)
 
+
     fun validateVin(vin: String) {
         viewModel.isErrorVin = vin.length < VIN_MINIMUM_SYMBOLS
     }
 
-    fun validateDriver(driver: String) {
-        viewModel.isErrorDriver = driver.length < ROW_MINIMUM_SYMBOLS
+    fun validateField(field: String) {
+        viewModel.isErrorField = field.length < ROW_MINIMUM_SYMBOLS
+    }
+
+    fun validateRow(row: String) {
+        viewModel.isErrorRow = row.length < ROW_MINIMUM_SYMBOLS
+    }
+
+    fun validateCell(cell: String) {
+        viewModel.isErrorCell = cell.length < ROW_MINIMUM_SYMBOLS
     }
     when (val collectState = state.value) {
-        is ScreenState.AddressCleared -> {}
+        is ScreenState.AddressCleared -> {
+            viewModel.isErrorMessage = false
+            isLoading = false
+            SnackbarMessage(
+                message = collectState.message.toString(),
+                snackbarHostState = snackbarHostState,
+                scope = scope
+            )
+            viewModel.setDefaultState()
+        }
+
         is ScreenState.CameraResult -> {
             validateVin(collectState.result)
             viewModel.setDefaultState()
@@ -80,9 +99,8 @@ fun CarLottingScreen(
                 snackbarHostState = snackbarHostState,
                 scope = scope
             )
+            viewModel.clearEditTexts()
             viewModel.setDefaultState()
-            viewModel.clearFields()
-            viewModel.clearList()
         }
 
         ScreenState.Default -> {}
@@ -97,7 +115,6 @@ fun CarLottingScreen(
             viewModel.setDefaultState()
         }
 
-        is ScreenState.ListRefreshed -> {}
         ScreenState.Loading -> {
             isLoading = true
             LoadingScreen()
@@ -126,25 +143,25 @@ fun CarLottingScreen(
         }
     }
     if (stateErrorFields.value) {
-        validateDriver(viewModel.driver)
-        validateVin(viewModel.vin)
-        viewModel.setDefaultErrorFieldsState()
+        validateField(viewModel.field)
+        validateRow(viewModel.row)
+        validateCell(viewModel.cell)
+    } else {
+        viewModel.isErrorField = false
+        viewModel.isErrorRow = false
+        viewModel.isErrorCell = false
     }
-    if (stateErrorList.value) {
-        viewModel.isErrorMessage = true
-        SnackbarMessage(
-            message = stringResource(id = R.string.vin_already_in_list),
-            snackbarHostState = snackbarHostState,
-            scope = scope
-        )
-        viewModel.setDefaultErrorListState()
+    if (stateErrorVin.value) {
+        validateVin(viewModel.vin)
+    } else {
+        viewModel.isErrorVin = false
     }
 
     if (!isLoading) {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
         ) {
-            val (vinRow, cameraBtn) = createRefs()
+            val (vinRow, cameraBtn, editTexts, box) = createRefs()
 
             if (cameraScreenResult?.isNotEmpty() == true) {
                 viewModel.setCameraResult(cameraScreenResult.toString())
@@ -162,109 +179,88 @@ fun CarLottingScreen(
                     .constrainAs(vinRow) {
                     }
             )
+
             CreateCameraButton(
                 navController = navController,
                 modifier = Modifier.constrainAs(cameraBtn) {
                     top.linkTo(vinRow.top)
                     end.linkTo(parent.end)
                 })
-            val driverRow = createRef()
-            CreateVinField(
-                text = { viewModel.driver },
-                setText = { viewModel.driver = it },
-                charMax = DRIVER_MAXIMUM_SYMBOLS,
-                charMin = ROW_MINIMUM_SYMBOLS,
-                validateVin = { validateDriver(it) },
-                isError = viewModel.isErrorDriver,
-                name = stringResource(id = R.string.driver),
-                trailingIconEndPadding = 0,
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier
-                    .padding(top = 16.dp)
-                    .constrainAs(driverRow) {
+                    .constrainAs(editTexts) {
                         top.linkTo(vinRow.bottom)
                     }
-            )
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                CreateCompoundField(
+                    text = { viewModel.field },
+                    setText = { viewModel.field = it },
+                    charMax = 2,
+                    isError = viewModel.isErrorField,
+                    setError = { viewModel.isErrorField = it },
+                    modifier = Modifier,
+                    name = stringResource(id = R.string.field)
+                )
+                CreateCompoundField(
+                    text = { viewModel.row },
+                    setText = { viewModel.row = it },
+                    charMax = 3,
+                    isError = viewModel.isErrorRow,
+                    setError = { viewModel.isErrorRow = it },
+                    modifier = Modifier,
+                    name = stringResource(id = R.string.row)
+                )
+                CreateCompoundField(
+                    text = { viewModel.cell },
+                    setText = { viewModel.cell = it },
+                    charMax = 2,
+                    isError = viewModel.isErrorCell,
+                    setError = { viewModel.isErrorCell = it },
+                    modifier = Modifier,
+                    name = stringResource(id = R.string.cell)
+                )
+            }
             val btnRow = createRef()
             CreateButtonsRow(
                 modifier = Modifier.constrainAs(btnRow) {
-                    top.linkTo(driverRow.bottom)
+                    top.linkTo(editTexts.bottom)
                 },
-                okBtnName = stringResource(id = R.string.add),
-                onClickOk = {
-                    if (stateIsClickable.value) {
-                        validateVin(viewModel.vin)
-                        if (!viewModel.isErrorVin) {
-                            viewModel.addToList()
-                            viewModel.onVinClicked()
-                        }
-                    }
-                },
-                onClickClear = { viewModel.clearFields() })
-            val (lazyColumn, updateBtn) = createRefs()
-            val listOfVin = mutableListOf<String>()
-            listOfVin.addAll(viewModel.lot)
-            if (listOfVin.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(lazyColumn) {
-                            top.linkTo(btnRow.bottom)
-                            bottom.linkTo(updateBtn.top)
-                            height = Dimension.fillToConstraints
-                        }
+                onClickOk = { viewModel.request() },
+                onClickClear = { viewModel.clearEditTexts() })
 
-
-                ) {
-                    items(listOfVin.size) { index ->
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(text = (index + 1).toString())
-                            Text(text = listOfVin[index])
-                            IconButton(onClick = { viewModel.removeFromList(listOfVin[index]) }) {
-                                Icon(Icons.Filled.RestoreFromTrash, contentDescription = null)
-                            }
-                        }
-                    }
-                }
-
-                Button(
-                    modifier = Modifier.constrainAs(updateBtn) {
+            val clearBtn = createRef()
+            Button(
+                onClick = { viewModel.clearCell() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = yellow
+                ),
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .constrainAs(clearBtn) {
+                        top.linkTo(btnRow.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom, 70.dp)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = yellow
-                    ),
-                    onClick = { viewModel.request() }) {
-                    Text(
-                        text = stringResource(id = R.string.create_lot),
-                        fontSize = 20.sp
-                    )
-                }
+                    }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.clear_cell),
+                    fontSize = 20.sp
+                )
             }
-
-
-            val snack = createRef()
             CreateSnackbarHost(
                 snackbarHostState = snackbarHostState,
                 viewModel.isErrorMessage,
                 modifier = Modifier
-                    .constrainAs(snack) {
+                    .constrainAs(box) {
                         bottom.linkTo(parent.bottom, 100.dp)
                     }
             )
-
         }
     }
-
 }
 
-@Preview
-@Composable
-fun CarLottingScreenPreview() {
-    CarLottingScreen(navController = rememberNavController())
-}
+

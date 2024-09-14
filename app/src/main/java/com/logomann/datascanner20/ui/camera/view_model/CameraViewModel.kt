@@ -8,7 +8,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.logomann.datascanner20.ui.ScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -54,6 +53,4 @@ class CameraViewModel : ViewModel() {
         screenStateLiveData.postValue(state)
     }
 
-
-    fun getScreenStateLiveData(): LiveData<CameraScreenState> = screenStateLiveData
 }
