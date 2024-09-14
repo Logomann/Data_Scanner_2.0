@@ -1,51 +1,72 @@
 package com.logomann.datascanner20.ui.car.view_model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.domain.network.ConnectionInteractor
-import com.logomann.datascanner20.ui.ScreenState
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.util.SEARCH_BY_PLACE_CODE
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 
 class CarSearchByPlaceViewModel(private val interactor: ConnectionInteractor) : ViewModel() {
-    private var field = 0
-    private var row = 0
-    private var cell = 0
-    private val screenStateLiveData =
-        MutableLiveData<ScreenState>(ScreenState.Default)
+
+    private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
+    val state: StateFlow<ScreenState> = _state
+
+    private val _stateErrorFields = MutableStateFlow(false)
+    val stateErrorFields: StateFlow<Boolean> = _stateErrorFields
+
+    var isErrorMessage by mutableStateOf(false)
+    var isErrorField by mutableStateOf(false)
+    var isErrorRow by mutableStateOf(false)
+    var isErrorCell by mutableStateOf(false)
+    var field by mutableStateOf("")
+    var row by mutableStateOf("")
+    var cell by mutableStateOf("")
 
     private fun search() {
-        setScreenState(ScreenState.Loading)
+        _state.value = ScreenState.Loading
         interactor.request(
             ConnectionModel.Address(
-                field, row, cell,
+                field.toInt(), row.toInt(), cell.toInt(),
                 SEARCH_BY_PLACE_CODE
             ), onComplete = { data, code ->
                 if (data == null) {
-                    screenStateLiveData.postValue(ScreenState.NoInternet)
+                    _state.value = ScreenState.NoInternet
                 } else if (code == 1) {
-                    screenStateLiveData.postValue(ScreenState.Content(data))
+                    _state.value = ScreenState.Content(data)
                 } else if (code == 2) {
-                    screenStateLiveData.postValue(ScreenState.ServerError)
+                    _state.value = ScreenState.ServerError
                 } else {
-                    screenStateLiveData.postValue(ScreenState.Error(data))
+                    _state.value = ScreenState.Error(data)
                 }
-
             })
     }
 
-    private fun setScreenState(state: ScreenState) {
-        screenStateLiveData.postValue(state)
+    fun request() {
+        if (isFieldsEmpty()) {
+            _stateErrorFields.value = true
+        } else {
+            search()
+        }
     }
 
-    fun request(field: Int, row: Int, cell: Int) {
-        this.field = field
-        this.row = row
-        this.cell = cell
-        search()
+    private fun isFieldsEmpty(): Boolean {
+        return field.isEmpty() || row.isEmpty() || cell.isEmpty()
     }
 
-    fun getScreenStateLiveData(): LiveData<ScreenState> = screenStateLiveData
+    fun clearEditTexts() {
+        field = ""
+        row = ""
+        cell = ""
+        _stateErrorFields.value = false
+    }
+
+    fun setDefaultState() {
+        _state.value = ScreenState.Default
+    }
 }

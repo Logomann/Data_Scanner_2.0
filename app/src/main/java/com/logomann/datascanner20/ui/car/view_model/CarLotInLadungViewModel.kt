@@ -1,52 +1,73 @@
 package com.logomann.datascanner20.ui.car.view_model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.logomann.datascanner20.domain.models.ConnectionModel
 import com.logomann.datascanner20.domain.network.ConnectionInteractor
-import com.logomann.datascanner20.ui.ScreenState
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.util.LOT_IN_LADUNG_CODE
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 
 class CarLotInLadungViewModel(private val interactor: ConnectionInteractor) : ViewModel() {
-    private var lot = ""
-    private var row = ""
-    private val screenStateLiveData =
-        MutableLiveData<ScreenState>(ScreenState.Default)
+
+    private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
+    val state: StateFlow<ScreenState> = _state
+
+    private val _stateErrorFields = MutableStateFlow(false)
+    val stateErrorFields: StateFlow<Boolean> = _stateErrorFields
+
+    var lot by mutableStateOf("")
+    var row by mutableStateOf("")
+    var isErrorLot by mutableStateOf(false)
+    var isErrorRow by mutableStateOf(false)
+    var isErrorMessage by mutableStateOf(false)
 
     private fun setLot() {
-        setScreenState(ScreenState.Loading)
+        _state.value = ScreenState.Loading
         interactor.request(ConnectionModel.Lot(
             lot, row,
             LOT_IN_LADUNG_CODE
         ), onComplete = { data, code ->
             if (data == null) {
-                screenStateLiveData.postValue(ScreenState.NoInternet)
+                _state.value = ScreenState.NoInternet
             } else if (code == 1) {
-                screenStateLiveData.postValue(ScreenState.Content(data))
+                _state.value = ScreenState.Content(data)
             } else if (code == 2) {
-                screenStateLiveData.postValue(ScreenState.ServerError)
+                _state.value = ScreenState.ServerError
             } else {
-                screenStateLiveData.postValue(ScreenState.Error(data))
+                _state.value = ScreenState.Error(data)
             }
-
         })
     }
 
-    private fun setScreenState(state: ScreenState) {
-        screenStateLiveData.postValue(state)
-    }
-
-    fun request(lot: String, row: String) {
-        this.lot = lot
-        this.row = row
-        setLot()
+    fun request() {
+        if (isFieldsEmpty()) {
+            _stateErrorFields.value = true
+        } else {
+            setLot()
+        }
     }
 
     fun setCameraResult(result: String) {
-        screenStateLiveData.postValue(ScreenState.CameraResult(result))
+        _state.value = ScreenState.CameraResult(result)
     }
 
-    fun getScreenStateLiveData(): LiveData<ScreenState> = screenStateLiveData
+    fun clearFields() {
+        lot = ""
+        row = ""
+        isErrorLot = false
+        isErrorRow = false
+    }
+
+    private fun isFieldsEmpty(): Boolean {
+        return lot.isEmpty() || row.isEmpty()
+    }
+
+    fun setDefaultState() {
+        _state.value = ScreenState.Default
+    }
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Data Scanner 2.0</string>
     <string name="authorization">Authorization</string>
-    <string name="input_pin">Input PIN</string>
+    <string name="input_pin">PIN</string>
     <string name="ok">OK</string>
     <string name="repeat">Repeat</string>
     <string name="input_digits" translatable="false">0,1,2,3,4,5,6,7,8,9, ,QWERTYUPASDFGHJKLZXCVBNMqwertyupasdfghjklzxcvbnm</string>
@@ -18,9 +18,9 @@
     <string name="lot_in_ladung">Lot in ladung</string>
     <string name="loading_sheet">Loading sheet</string>
     <string name="car_lotting">Car lotting</string>
-    <string name="driver">Drv</string>
+    <string name="driver">Driver code</string>
     <string name="way">Way</string>
-    <string name="wagon">Wagon</string>
+    <string name="wagon">Wagon number</string>
     <string name="take_shot">Take shot</string>
     <string name="car_operations">Car operations</string>
     <string name="container_operations">Container operations</string>
@@ -31,7 +31,7 @@
     <string name="server_error">Server Error</string>
     <string name="nointernet">No Internet</string>
     <string name="sector">Sector</string>
-    <string name="enter_container_number">Enter container number</string>
+    <string name="enter_container_number">Container number</string>
     <string name="input_digits_container" translatable="false">0,1,2,3,4,5,6,7,8,9, ,QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm</string>
     <string name="container_arrival">Container Arrival</string>
     <string name="container_in_carriage">Container in carriage</string>
@@ -45,9 +45,24 @@
     <string name="enter_row">Enter row</string>
     <string name="enter_driver_code">Enter driver code</string>
     <string name="vin_already_in_list">VIN already in list!</string>
-    <string name="empty" translatable="false"> </string>>
+    <string name="empty" translatable="false"> </string>
+    <string name="vin_support_error">%1$s can\'t be less than %2$s</string>
+    <string name="pin_can_t_be_empty">Pin can\'t be empty</string>
+    <string name="cancel">Cancel</string>
+    <string name="tsd">TSD selected:</string>
+    <string name="naro_fominsk">Naro-Fominsk</string>
+    <string name="golytsino">Golytsino</string>
+    <string name="beloostrov">Beloostrov</string>
+    <string name="akulovo">Akulovo</string>>
     <string-array name="ways">
         <item>1</item>
         <item>2</item>
     </string-array>
+    <plurals name="symbol_plurals">
+        <item quantity="zero">%d symbols</item>
+        <item quantity="one">%d symbol</item>
+        <item quantity="few">%d symbols</item>
+        <item quantity="many">%d symbols</item>
+        <item quantity="other">%d symbols</item>
+    </plurals>
 </resources>

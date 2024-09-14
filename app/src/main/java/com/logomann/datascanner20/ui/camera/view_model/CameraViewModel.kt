@@ -1,6 +1,5 @@
 package com.logomann.datascanner20.ui.camera.view_model
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.logomann.datascanner20.ui.camera.CameraScreenState
@@ -8,12 +7,17 @@ import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 
 class CameraViewModel : ViewModel() {
     private var result = ""
     private val screenStateLiveData =
         MutableLiveData<CameraScreenState>(CameraScreenState.Default)
+
+    private val _state = MutableStateFlow<CameraScreenState>(CameraScreenState.Default)
+    val state: StateFlow<CameraScreenState> = _state
 
     fun setResult(barcode: Barcode) {
         result = if (barcode.rawValue!!.startsWith("VinCode:")) {
@@ -28,6 +32,7 @@ class CameraViewModel : ViewModel() {
 
     private fun updateResult() {
         setScreenState(CameraScreenState.Result(result))
+        _state.value = CameraScreenState.Result(result)
     }
 
     fun getScanner(): BarcodeScanner {
@@ -47,6 +52,4 @@ class CameraViewModel : ViewModel() {
         screenStateLiveData.postValue(state)
     }
 
-
-    fun getScreenStateLiveData(): LiveData<CameraScreenState> = screenStateLiveData
 }
