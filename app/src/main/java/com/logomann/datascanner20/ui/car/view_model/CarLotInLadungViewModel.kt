@@ -17,9 +17,6 @@ class CarLotInLadungViewModel(private val interactor: ConnectionInteractor) : Vi
     private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
     val state: StateFlow<ScreenState> = _state
 
-    private val _stateErrorFields = MutableStateFlow(false)
-    val stateErrorFields: StateFlow<Boolean> = _stateErrorFields
-
     var lot by mutableStateOf("")
     var row by mutableStateOf("")
     var isErrorLot by mutableStateOf(false)
@@ -45,15 +42,10 @@ class CarLotInLadungViewModel(private val interactor: ConnectionInteractor) : Vi
     }
 
     fun request() {
-        if (isFieldsEmpty()) {
-            _stateErrorFields.value = true
-        } else {
+        isFieldsEmpty()
+        if (!isErrorLot && !isErrorRow) {
             setLot()
         }
-    }
-
-    fun setCameraResult(result: String) {
-        _state.value = ScreenState.CameraResult(result)
     }
 
     fun clearFields() {
@@ -63,8 +55,13 @@ class CarLotInLadungViewModel(private val interactor: ConnectionInteractor) : Vi
         isErrorRow = false
     }
 
-    private fun isFieldsEmpty(): Boolean {
-        return lot.isEmpty() || row.isEmpty()
+    private fun isFieldsEmpty() {
+        if (lot.isEmpty()) {
+            isErrorLot = true
+        }
+        if (row.isEmpty()) {
+            isErrorRow = true
+        }
     }
 
     fun setDefaultState() {

@@ -25,14 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.ui.camera.view_model.CameraViewModel
 import com.logomann.datascanner20.util.CAMERA_RESULT
 import kotlinx.coroutines.delay
@@ -100,6 +98,7 @@ fun Camera(
                 collectState.result
             )
             navController.navigateUp()
+            viewModel.setDefaultState()
         }
     }
     fun switchFlash() {
@@ -162,11 +161,5 @@ fun Camera(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun CameraPreview() {
-    Camera(rememberNavController())
 }
 

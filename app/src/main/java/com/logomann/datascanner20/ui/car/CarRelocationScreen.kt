@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.screens.CreateButtonsRow
 import com.logomann.datascanner20.ui.screens.CreateCameraButton
 import com.logomann.datascanner20.ui.screens.CreateCompoundField
 import com.logomann.datascanner20.ui.screens.CreateVinField
 import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
 import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import com.logomann.datascanner20.ui.theme.yellow
@@ -49,8 +49,6 @@ fun CarRelocationScreen(
     viewModel: CarRelocationViewModel1 = koinViewModel()
 ) {
     val state = viewModel.state.collectAsState()
-    val stateErrorFields = viewModel.stateErrorFields.collectAsState()
-    val stateErrorVin = viewModel.stateErrorVin.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -63,17 +61,6 @@ fun CarRelocationScreen(
         viewModel.isErrorVin = vin.length < VIN_MINIMUM_SYMBOLS
     }
 
-    fun validateField(field: String) {
-        viewModel.isErrorField = field.length < ROW_MINIMUM_SYMBOLS
-    }
-
-    fun validateRow(row: String) {
-        viewModel.isErrorRow = row.length < ROW_MINIMUM_SYMBOLS
-    }
-
-    fun validateCell(cell: String) {
-        viewModel.isErrorCell = cell.length < ROW_MINIMUM_SYMBOLS
-    }
     when (val collectState = state.value) {
         is ScreenState.AddressCleared -> {
             viewModel.isErrorMessage = false
@@ -87,8 +74,6 @@ fun CarRelocationScreen(
         }
 
         is ScreenState.CameraResult -> {
-            validateVin(collectState.result)
-            viewModel.setDefaultState()
         }
 
         is ScreenState.Content -> {
@@ -142,20 +127,6 @@ fun CarRelocationScreen(
             viewModel.setDefaultState()
         }
     }
-    if (stateErrorFields.value) {
-        validateField(viewModel.field)
-        validateRow(viewModel.row)
-        validateCell(viewModel.cell)
-    } else {
-        viewModel.isErrorField = false
-        viewModel.isErrorRow = false
-        viewModel.isErrorCell = false
-    }
-    if (stateErrorVin.value) {
-        validateVin(viewModel.vin)
-    } else {
-        viewModel.isErrorVin = false
-    }
 
     if (!isLoading) {
         ConstraintLayout(
@@ -164,8 +135,10 @@ fun CarRelocationScreen(
             val (vinRow, cameraBtn, editTexts, box) = createRefs()
 
             if (cameraScreenResult?.isNotEmpty() == true) {
-                viewModel.setCameraResult(cameraScreenResult.toString())
+                viewModel.vin = cameraScreenResult.toString()
                 navController.currentBackStackEntry!!.savedStateHandle.remove<String>(CAMERA_RESULT)
+                validateVin(viewModel.vin)
+
             }
             CreateVinField(
                 text = { viewModel.vin },

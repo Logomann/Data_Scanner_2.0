@@ -18,12 +18,6 @@ class CarRelocationViewModel(private val interactor: ConnectionInteractor) : Vie
     private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
     val state: StateFlow<ScreenState> = _state
 
-    private val _stateErrorFields = MutableStateFlow(false)
-    val stateErrorFields: StateFlow<Boolean> = _stateErrorFields
-
-    private val _stateErrorVin = MutableStateFlow(false)
-    val stateErrorVin: StateFlow<Boolean> = _stateErrorVin
-
     var vin by mutableStateOf("")
     var isErrorVin by mutableStateOf(false)
     var isErrorField by mutableStateOf(false)
@@ -48,9 +42,7 @@ class CarRelocationViewModel(private val interactor: ConnectionInteractor) : Vie
     }
 
     fun clearCell() {
-        if (isFieldsEmpty()) {
-            _stateErrorFields.value = true
-        } else {
+        if (!isFieldsError()) {
             _state.value = ScreenState.Loading
             val address =
                 ConnectionModel.Address(field.toInt(), row.toInt(), cell.toInt(), CLEAR_CELL_CODE)
@@ -69,25 +61,12 @@ class CarRelocationViewModel(private val interactor: ConnectionInteractor) : Vie
     }
 
     fun request() {
-        if (isErrorVin) {
-            _stateErrorVin.value = true
-            if (isFieldsEmpty()) {
-                _stateErrorFields.value = true
-            }
-        } else {
-            if (isFieldsEmpty()) {
-                _stateErrorFields.value = true
-            } else {
-                val address = ConnectionModel.Address(field.toInt(), row.toInt(), cell.toInt(), 0)
-                car = ConnectionModel.Car(vin, address, RELOCATION_CODE)
-                updateData()
-            }
+        isFieldsEmpty()
+        if (!isFieldsError() && !isErrorVin) {
+            val address = ConnectionModel.Address(field.toInt(), row.toInt(), cell.toInt(), 0)
+            car = ConnectionModel.Car(vin, address, RELOCATION_CODE)
+            updateData()
         }
-    }
-
-    fun setCameraResult(result: String) {
-        vin = result
-        _state.value = ScreenState.CameraResult(result)
     }
 
     fun clearEditTexts() {
@@ -95,15 +74,32 @@ class CarRelocationViewModel(private val interactor: ConnectionInteractor) : Vie
         field = ""
         row = ""
         cell = ""
-        _stateErrorFields.value = false
-        _stateErrorVin.value = false
+        isErrorVin = false
+        isErrorField = false
+        isErrorRow = false
+        isErrorCell = false
+    }
+
+    private fun isFieldsEmpty() {
+        if (vin.isEmpty()) {
+            isErrorVin = true
+        }
+        if (field.isEmpty()) {
+            isErrorField = true
+        }
+        if (row.isEmpty()) {
+            isErrorRow = true
+        }
+        if (cell.isEmpty()) {
+            isErrorCell = true
+        }
     }
 
     fun setDefaultState() {
         _state.value = ScreenState.Default
     }
 
-    private fun isFieldsEmpty(): Boolean {
-        return field.isEmpty() || row.isEmpty() || cell.isEmpty()
+    private fun isFieldsError(): Boolean {
+        return isErrorField || isErrorRow || isErrorCell
     }
 }
