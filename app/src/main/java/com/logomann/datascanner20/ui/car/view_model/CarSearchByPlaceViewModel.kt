@@ -17,9 +17,6 @@ class CarSearchByPlaceViewModel(private val interactor: ConnectionInteractor) : 
     private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
     val state: StateFlow<ScreenState> = _state
 
-    private val _stateErrorFields = MutableStateFlow(false)
-    val stateErrorFields: StateFlow<Boolean> = _stateErrorFields
-
     var isErrorMessage by mutableStateOf(false)
     var isErrorField by mutableStateOf(false)
     var isErrorRow by mutableStateOf(false)
@@ -48,22 +45,35 @@ class CarSearchByPlaceViewModel(private val interactor: ConnectionInteractor) : 
     }
 
     fun request() {
-        if (isFieldsEmpty()) {
-            _stateErrorFields.value = true
-        } else {
+        isFieldsEmpty()
+        if (!isErrorFields()) {
             search()
         }
     }
 
-    private fun isFieldsEmpty(): Boolean {
-        return field.isEmpty() || row.isEmpty() || cell.isEmpty()
+    private fun isFieldsEmpty() {
+        if (field.isEmpty()) {
+            isErrorField = true
+        }
+        if (row.isEmpty()) {
+            isErrorRow = true
+        }
+        if (cell.isEmpty()) {
+            isErrorCell = true
+        }
+    }
+
+    private fun isErrorFields(): Boolean {
+        return isErrorField || isErrorRow || isErrorCell
     }
 
     fun clearEditTexts() {
         field = ""
         row = ""
         cell = ""
-        _stateErrorFields.value = false
+        isErrorField = false
+        isErrorRow = false
+        isErrorCell = false
     }
 
     fun setDefaultState() {

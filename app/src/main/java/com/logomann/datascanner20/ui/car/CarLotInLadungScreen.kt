@@ -40,7 +40,6 @@ fun CarLotInLadungScreen(
     viewModel: CarLotInLadungViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsState()
-    val stateErrorFields = viewModel.stateErrorFields.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -57,10 +56,7 @@ fun CarLotInLadungScreen(
     }
     when (val collectState = state.value) {
         is ScreenState.AddressCleared -> {}
-        is ScreenState.CameraResult -> {
-            validateLot(collectState.result)
-            viewModel.setDefaultState()
-        }
+        is ScreenState.CameraResult -> {}
 
         is ScreenState.Content -> {
             viewModel.isErrorMessage = false
@@ -114,11 +110,6 @@ fun CarLotInLadungScreen(
         }
     }
 
-    if (stateErrorFields.value) {
-        validateLot(viewModel.lot)
-        validateRow(viewModel.row)
-    }
-
     if (!isLoading) {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
@@ -126,8 +117,9 @@ fun CarLotInLadungScreen(
             val (lotRow, cameraBtn, row) = createRefs()
 
             if (cameraScreenResult?.isNotEmpty() == true) {
-                viewModel.setCameraResult(cameraScreenResult.toString())
+                viewModel.lot = cameraScreenResult.toString()
                 navController.currentBackStackEntry!!.savedStateHandle.remove<String>(CAMERA_RESULT)
+                validateLot(viewModel.lot)
             }
             CreateVinField(
                 text = { viewModel.lot },

@@ -20,12 +20,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.car.view_model.CarSearchByVINViewModel
 import com.logomann.datascanner20.ui.screens.CreateButtonsRow
 import com.logomann.datascanner20.ui.screens.CreateCameraButton
 import com.logomann.datascanner20.ui.screens.CreateVinField
 import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
 import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import com.logomann.datascanner20.util.CAMERA_RESULT
@@ -38,7 +38,6 @@ fun CarSearchByVinScreen(
     viewModel: CarSearchByVINViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsState()
-    val stateErrorFields = viewModel.stateErrorFields.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -51,10 +50,7 @@ fun CarSearchByVinScreen(
     }
     when (val collectState = state.value) {
         is ScreenState.AddressCleared -> {}
-        is ScreenState.CameraResult -> {
-            validateVin(collectState.result)
-            viewModel.setDefaultState()
-        }
+        is ScreenState.CameraResult -> {}
 
         is ScreenState.Content -> {
             viewModel.isErrorMessage = false
@@ -108,10 +104,6 @@ fun CarSearchByVinScreen(
         }
     }
 
-    if (stateErrorFields.value) {
-        validateVin(viewModel.vin)
-    }
-
     if (!isLoading) {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
@@ -119,8 +111,9 @@ fun CarSearchByVinScreen(
             val (vinRow, cameraBtn) = createRefs()
 
             if (cameraScreenResult?.isNotEmpty() == true) {
-                viewModel.setCameraResult(cameraScreenResult.toString())
+                viewModel.vin = cameraScreenResult.toString()
                 navController.currentBackStackEntry!!.savedStateHandle.remove<String>(CAMERA_RESULT)
+                validateVin(viewModel.vin)
             }
             CreateVinField(
                 text = { viewModel.vin },

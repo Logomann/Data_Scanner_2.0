@@ -47,22 +47,9 @@ fun CarSearchByPlaceScreen(
     viewModel: CarSearchByPlaceViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsState()
-    val stateErrorFields = viewModel.stateErrorFields.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-
-    fun validateField(field: String) {
-        viewModel.isErrorField = field.length < ROW_MINIMUM_SYMBOLS
-    }
-
-    fun validateRow(row: String) {
-        viewModel.isErrorRow = row.length < ROW_MINIMUM_SYMBOLS
-    }
-
-    fun validateCell(cell: String) {
-        viewModel.isErrorCell = cell.length < ROW_MINIMUM_SYMBOLS
-    }
 
     when (val collectState = state.value) {
         is ScreenState.AddressCleared -> {}
@@ -125,16 +112,6 @@ fun CarSearchByPlaceScreen(
             )
             viewModel.setDefaultState()
         }
-    }
-
-    if (stateErrorFields.value) {
-        validateField(viewModel.field)
-        validateRow(viewModel.row)
-        validateCell(viewModel.cell)
-    } else {
-        viewModel.isErrorField = false
-        viewModel.isErrorRow = false
-        viewModel.isErrorCell = false
     }
 
     if (!isLoading) {

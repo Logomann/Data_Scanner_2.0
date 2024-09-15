@@ -16,9 +16,6 @@ class CarSearchByVINViewModel(private val interactor: ConnectionInteractor) : Vi
     private val _state = MutableStateFlow<ScreenState>(ScreenState.Default)
     val state: StateFlow<ScreenState> = _state
 
-    private val _stateErrorFields = MutableStateFlow(false)
-    val stateErrorFields: StateFlow<Boolean> = _stateErrorFields
-
     var vin by mutableStateOf("")
     var isErrorVin by mutableStateOf(false)
     var isErrorMessage by mutableStateOf(false)
@@ -45,20 +42,14 @@ class CarSearchByVINViewModel(private val interactor: ConnectionInteractor) : Vi
         if (vin.isEmpty()) {
             isErrorVin = true
         }
-        if (isErrorVin) {
-            _stateErrorFields.value = true
-        } else {
+        if (!isErrorVin) {
             search()
         }
     }
 
     fun clearVin() {
         vin = ""
-    }
-
-    fun setCameraResult(result: String) {
-        vin = result
-        _state.value = ScreenState.CameraResult(result)
+        isErrorVin = false
     }
 
     fun setDefaultState() {

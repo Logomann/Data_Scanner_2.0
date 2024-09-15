@@ -19,9 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.logomann.datascanner20.R
-//import com.logomann.datascanner20.ui.theme.errorLight
-import com.logomann.datascanner20.ui.theme.primaryLight
-
 
 @Composable
 fun CreateCameraButton(navController: NavController, modifier: Modifier) {

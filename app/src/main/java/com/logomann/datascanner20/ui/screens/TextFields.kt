@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,8 @@ fun CreateVinField(
         },
 
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text
+            keyboardType = KeyboardType.Text,
+            capitalization = KeyboardCapitalization.Characters
         ),
         shape = RoundedCornerShape(8.dp),
         modifier = modifier
@@ -113,7 +115,8 @@ fun CreateCompoundField(
         },
         maxLines = 1,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            capitalization = KeyboardCapitalization.Characters
         ),
         isError = isError,
         label = {
