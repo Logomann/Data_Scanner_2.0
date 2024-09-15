@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RestoreFromTrash
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -229,7 +229,7 @@ fun CarLottingScreen(
                             Text(text = (index + 1).toString())
                             Text(text = listOfVin[index])
                             IconButton(onClick = { viewModel.removeFromList(listOfVin[index]) }) {
-                                Icon(Icons.Filled.RestoreFromTrash, contentDescription = null)
+                                Icon(Icons.Filled.Delete, contentDescription = null)
                             }
                         }
                     }
@@ -239,7 +239,7 @@ fun CarLottingScreen(
                     modifier = Modifier.constrainAs(updateBtn) {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom, 70.dp)
+                        bottom.linkTo(parent.bottom, 85.dp)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = yellow
