@@ -1,6 +1,5 @@
 package com.logomann.datascanner20.ui.camera.view_model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.logomann.datascanner20.ui.camera.CameraScreenState
 import com.google.mlkit.vision.barcode.BarcodeScanner
@@ -9,7 +8,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
 
 class CameraViewModel : ViewModel() {
     private var result = ""
