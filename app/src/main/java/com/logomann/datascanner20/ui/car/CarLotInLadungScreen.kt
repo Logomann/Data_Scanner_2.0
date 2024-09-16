@@ -2,6 +2,7 @@ package com.logomann.datascanner20.ui.car
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,18 +15,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.car.view_model.CarLotInLadungViewModel
 import com.logomann.datascanner20.ui.screens.CreateButtonsRow
 import com.logomann.datascanner20.ui.screens.CreateCameraButton
 import com.logomann.datascanner20.ui.screens.CreateVinField
 import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
 import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import com.logomann.datascanner20.util.CAMERA_RESULT
@@ -151,6 +153,9 @@ fun CarLotInLadungScreen(
                         top.linkTo(lotRow.bottom)
                     },
                 trailingIconEndPadding = 0,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
                 name = stringResource(id = R.string.row)
             )
             val btnRow = createRef()
