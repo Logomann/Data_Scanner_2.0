@@ -1,19 +1,16 @@
 package com.logomann.datascanner20.ui.camera.view_model
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.logomann.datascanner20.ui.camera.CameraScreenState
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 class CameraViewModel : ViewModel() {
-    private var result = ""
-
-    private val _state = MutableStateFlow<CameraScreenState>(CameraScreenState.Default)
-    val state: StateFlow<CameraScreenState> = _state
+    var result by mutableStateOf("")
 
     fun setResult(barcode: Barcode) {
         result = if (barcode.rawValue!!.startsWith("VinCode:")) {
@@ -21,13 +18,8 @@ class CameraViewModel : ViewModel() {
         } else if (barcode.rawValue!!.startsWith("*")) {
             barcode.rawValue!!.substring(1)
         } else {
-            barcode.rawValue.toString()
+            barcode.rawValue.toString().uppercase()
         }
-        updateResult()
-    }
-
-    private fun updateResult() {
-        _state.value = CameraScreenState.Result(result)
     }
 
     fun getScanner(): BarcodeScanner {
@@ -40,8 +32,5 @@ class CameraViewModel : ViewModel() {
             )
             .build()
         return BarcodeScanning.getClient(options)
-    }
-    fun setDefaultState() {
-        _state.value = CameraScreenState.Default
     }
 }

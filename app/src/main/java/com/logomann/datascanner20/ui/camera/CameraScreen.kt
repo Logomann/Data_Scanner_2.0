@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +43,6 @@ fun Camera(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val state = viewModel.state.collectAsState()
     var hasFlash by remember {
         mutableStateOf(false)
     }
@@ -89,16 +87,13 @@ fun Camera(
         delay(100L)
         hasFlash = cameraController.cameraInfo?.hasFlashUnit() ?: false
     }
-
-    when (val collectState = state.value) {
-        CameraScreenState.Default -> {}
-        is CameraScreenState.Result -> {
+    LaunchedEffect(key1 = viewModel.result) {
+        if (viewModel.result.isNotEmpty()) {
             navController.previousBackStackEntry?.savedStateHandle?.set(
                 CAMERA_RESULT,
-                collectState.result
+                viewModel.result
             )
-            navController.navigateUp()
-            viewModel.setDefaultState()
+           navController.navigateUp()
         }
     }
     fun switchFlash() {
@@ -111,6 +106,7 @@ fun Camera(
                 true
             }
     }
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
