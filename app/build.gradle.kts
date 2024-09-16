@@ -19,8 +19,8 @@ android {
         applicationId = "com.logomann.datascanner20"
         minSdk = 29
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.1.2"
+        versionCode = 9
+        versionName = "1.1.3"
         buildConfigField(type = "String", name = "SERVER_IP", value = "\"${developProperties["serverIp"]}\"")
         buildConfigField(type = "String", name = "DB_LOGIN", value = "\"${developProperties["dbLogin"]}\"")
         buildConfigField(type = "String", name = "DB_PASSWORD", value = "\"${developProperties["dbPassword"]}\"")
