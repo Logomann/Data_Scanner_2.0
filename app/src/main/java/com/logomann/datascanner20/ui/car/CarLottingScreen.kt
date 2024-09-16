@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,12 +36,12 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.logomann.datascanner20.R
-import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.car.view_model.CarLottingViewModel
 import com.logomann.datascanner20.ui.screens.CreateButtonsRow
 import com.logomann.datascanner20.ui.screens.CreateCameraButton
 import com.logomann.datascanner20.ui.screens.CreateVinField
 import com.logomann.datascanner20.ui.screens.LoadingScreen
+import com.logomann.datascanner20.ui.screens.ScreenState
 import com.logomann.datascanner20.ui.snackbar.CreateSnackbarHost
 import com.logomann.datascanner20.ui.snackbar.SnackbarMessage
 import com.logomann.datascanner20.ui.theme.yellow
@@ -182,6 +184,9 @@ fun CarLottingScreen(
                 validateVin = { validateDriver(it) },
                 isError = viewModel.isErrorDriver,
                 name = stringResource(id = R.string.driver),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
                 trailingIconEndPadding = 0,
                 modifier = Modifier
                     .padding(top = 16.dp)

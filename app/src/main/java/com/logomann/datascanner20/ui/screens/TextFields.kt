@@ -34,10 +34,14 @@ fun CreateVinField(
     isError: Boolean,
     modifier: Modifier,
     name: String = stringResource(id = R.string.vin_code),
-    trailingIconEndPadding: Int = 48
+    trailingIconEndPadding: Int = 48,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Text,
+        capitalization = KeyboardCapitalization.Characters
+    )
 ) {
     TextField(
-        value = text(),
+        value = text().uppercase(),
         onValueChange = {
             if (it.length <= charMax) {
                 setText(it)
@@ -75,10 +79,7 @@ fun CreateVinField(
             }
         },
 
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.Characters
-        ),
+        keyboardOptions = keyboardOptions,
         shape = RoundedCornerShape(8.dp),
         modifier = modifier
             .fillMaxWidth()
