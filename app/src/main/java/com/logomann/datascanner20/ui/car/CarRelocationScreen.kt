@@ -129,17 +129,15 @@ fun CarRelocationScreen(
     }
 
     if (!isLoading) {
+        if (cameraScreenResult?.isNotEmpty() == true) {
+            viewModel.vin = cameraScreenResult.toString()
+            navController.currentBackStackEntry!!.savedStateHandle.remove<String>(CAMERA_RESULT)
+            validateVin(viewModel.vin)
+        }
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
         ) {
             val (vinRow, cameraBtn, editTexts, box) = createRefs()
-
-            if (cameraScreenResult?.isNotEmpty() == true) {
-                viewModel.vin = cameraScreenResult.toString()
-                navController.currentBackStackEntry!!.savedStateHandle.remove<String>(CAMERA_RESULT)
-                validateVin(viewModel.vin)
-
-            }
             CreateVinField(
                 text = { viewModel.vin },
                 setText = { viewModel.vin = it },
