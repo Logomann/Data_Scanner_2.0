@@ -41,7 +41,7 @@ fun CreateVinField(
     )
 ) {
     TextField(
-        value = text().uppercase(),
+        value = text(),
         onValueChange = {
             if (it.length <= charMax) {
                 setText(it)
